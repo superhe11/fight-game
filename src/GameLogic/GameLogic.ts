@@ -12,6 +12,7 @@ export const GameLogic = () => {
   const [hoveredUnit, setHoveredUnit] = useState<Unit | null>(null);
   const [currentAction, setCurrentAction] = useState<Action | null>(null);
   const [animations, setAnimations] = useState<ActionAnimation[]>([]);
+  const TimeoutValue = 600;
 
   useEffect(() => {
     initializeGame();
@@ -99,7 +100,7 @@ export const GameLogic = () => {
       setCurrentAction(null);
       setAnimations([]);
       endTurn();
-    }, 600);
+    }, TimeoutValue);
   };
 
   const endTurn = () => {

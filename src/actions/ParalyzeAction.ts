@@ -3,6 +3,7 @@ import { Unit } from "../models/Unit";
 import { Dispatch, SetStateAction } from "react";
 import { ActionAnimation } from "../animations/ActionAnimation";
 import { AnimationsFactory } from "../animations/AnimationFactory";
+const TimeoutValue = 600;
 
 export class ParalyzeAction implements Action {
   type: ActionType = "paralyze";
@@ -24,7 +25,7 @@ export class ParalyzeAction implements Action {
           `${unit.attributes.name} парализует ${target.attributes.name}`,
         );
       });
-    }, 600);
+    }, TimeoutValue);
   }
 
   getPossibleTargets(unit: Unit, battlefield: (Unit | null)[][]): Unit[] {

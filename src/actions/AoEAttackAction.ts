@@ -3,6 +3,7 @@ import { Unit } from "../models/Unit";
 import { Dispatch, SetStateAction } from "react";
 import { ActionAnimation } from "../animations/ActionAnimation";
 import { AnimationsFactory } from "../animations/AnimationFactory";
+const TimeoutValue = 600;
 
 export class AoEAttackAction implements Action {
   type: ActionType = "aoeAttack";
@@ -32,7 +33,7 @@ export class AoEAttackAction implements Action {
           `${unit.attributes.name} наносит ${damage} урона по ${target.attributes.name}`,
         );
       });
-    }, 600);
+    }, TimeoutValue);
   }
 
   getPossibleTargets(unit: Unit, battlefield: (Unit | null)[][]): Unit[] {
