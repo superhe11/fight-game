@@ -1,0 +1,187 @@
+* {
+  box-sizing: border-box;
+}
+
+.game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.battlefield {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+}
+
+.cell {
+  width: 150px;
+  height: 200px;
+  border: 1px solid #ccc;
+  position: relative;
+  margin: 2px;
+}
+
+.cell.red {
+  background-color: rgba(255, 0, 0, 0.1);
+}
+
+.cell.orange {
+  background-color: rgba(255, 165, 0, 0.1);
+}
+
+.cell img {
+  width: 100%;
+  height: auto;
+}
+
+.cell video {
+  width: 100%;
+  height: auto;
+}
+
+.hp-bar {
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  color: red;
+  font-weight: bold;
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 2px;
+  border-radius: 3px;
+}
+
+.highlighted {
+  border: 2px solid yellow;
+}
+
+.current-unit {
+  border: 2px solid blue;
+}
+
+.paralyzed {
+  opacity: 0.5;
+}
+
+.defending {
+  border: 2px solid green;
+}
+
+.hovered {
+  box-shadow: 0 0 10px 2px #fff;
+}
+
+.round-info {
+  margin-top: 20px;
+}
+
+.round-info ul {
+  list-style: none;
+  padding: 0;
+}
+
+.round-info li.current {
+  font-weight: bold;
+  color: blue;
+}
+
+.actions {
+  margin-top: 20px;
+}
+
+.actions button {
+  margin-right: 10px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.unit-image-container {
+  position: relative;
+}
+
+.unit-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.red-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(255, 0, 0, 0.5);
+}
+
+.game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.battlefield {
+  position: relative;
+  width: 450px;
+  height: 830px;
+  border: 1px solid #000;
+}
+
+.row {
+  position: relative;
+}
+
+.cell {
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  width: 150px;
+  height: 200px;
+}
+
+.cell.red {
+  background-color: #ffe5e5;
+}
+
+.cell.orange {
+  background-color: #fff5e5;
+}
+
+.cell.highlighted {
+  outline: 2px solid yellow;
+}
+
+.hp-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+}
+
+.actions {
+  margin-top: 20px;
+}
+
+.actions button {
+  margin-right: 10px;
+}
+
+.unit-icons > * {
+  margin-top: 2px;
+}
+.action-animation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
