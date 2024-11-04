@@ -11,21 +11,19 @@ export abstract class Unit {
   }
 
   abstract getPossibleTargets(
-    battlefield: (Unit | null)[][],
+    battlefield: Unit[][],
     enemyUnits: Unit[],
   ): Unit[];
 
   abstract initActions(): void;
 
-  getEnemyUnits(battlefield: (Unit | null)[][]): Unit[] {
+  getEnemyUnits(battlefield: Unit[][]): Unit[] {
     const enemyUnits: Unit[] = [];
     battlefield.forEach((row) => {
       row.forEach((cell) => {
-        if (
-          cell &&
-          cell.attributes.team !== this.attributes.team &&
-          cell.attributes.hp > 0
-        ) {
+        const isEnemyTeam = cell.attributes.team !== this.attributes.team;
+        const hasHp = cell.attributes.hp > 0;
+        if (isEnemyTeam && hasHp) {
           enemyUnits.push(cell);
         }
       });
@@ -33,15 +31,13 @@ export abstract class Unit {
     return enemyUnits;
   }
 
-  getAllyUnits(battlefield: (Unit | null)[][]): Unit[] {
+  getAllyUnits(battlefield: Unit[][]): Unit[] {
     const allyUnits: Unit[] = [];
     battlefield.forEach((row) => {
       row.forEach((cell) => {
-        if (
-          cell &&
-          cell.attributes.team === this.attributes.team &&
-          cell.attributes.hp > 0
-        ) {
+        const isAllyUnit = cell.attributes.team === this.attributes.team;
+        const hasHp = cell.attributes.hp > 0;
+        if (isAllyUnit && hasHp) {
           allyUnits.push(cell);
         }
       });

@@ -28,7 +28,7 @@ export const UnitIcons: React.FC<UnitIconsProps> = ({
       <FaCrosshairs key="attack" color="red" size={20} title="Цель атаки" />,
     );
   }
-  
+
   if (isHighlighted && actionType === "heal") {
     icons.push(
       <FaHandHoldingMedical

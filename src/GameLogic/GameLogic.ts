@@ -4,51 +4,47 @@ import { Unit } from "../models/Unit";
 import { UnitFactory } from "../factories/UnitFactory";
 import { Action } from "../actions/Action";
 
-export const GameLogic = () => {
-  const [battlefield, setBattlefield] = useState<(Unit | null)[][]>([]);
-  const [turnOrder, setTurnOrder] = useState<Unit[]>([]);
-  const [currentUnitIndex, setCurrentUnitIndex] = useState(0);
-  const [highlightedUnits, setHighlightedUnits] = useState<Unit[]>([]);
-  const [hoveredUnit, setHoveredUnit] = useState<Unit | null>(null);
-  const [currentAction, setCurrentAction] = useState<Action | null>(null);
-  const [animations, setAnimations] = useState<ActionAnimation[]>([]);
-  const TimeoutValue = 600;
+enum Team {
+  Red = "red",
+  Orange = "orange",
+}
 
-  useEffect(() => {
-    initializeGame();
-  }, []);
+const TIMEOUT_VALUE = 600;
+
+function useInitializeGame() {
+  const [battlefield, setBattlefield] = useState<Unit[][]>([]);
+  const [turnOrder, setTurnOrder] = useState<Unit[]>([]);
 
   const initializeGame = () => {
+    const unitNames = UnitFactory.getUnitNames();
     const numRows = 4;
-    const battlefieldGrid: (Unit | null)[][] = Array.from(
-      { length: numRows },
-      () => Array.from({ length: 3 }, () => null),
+    const battlefieldGrid: Unit[][] = Array.from({ length: numRows }, () =>
+      Array.from({ length: 3 }, () => {
+        const randomUnitName =
+          unitNames[Math.floor(Math.random() * unitNames.length)];
+        const unit = UnitFactory.createUnit(randomUnitName);
+        unit.attributes.isDefending = false;
+        unit.attributes.isParalyzed = false;
+        return unit;
+      }),
     );
 
-    const teams: Array<"red" | "orange"> = ["red", "orange"];
+    const teams: Team[] = [Team.Red, Team.Orange];
     const allUnits: Unit[] = [];
-
-    const unitNames = UnitFactory.getUnitNames();
 
     teams.forEach((team) => {
       for (let y = 0; y < 2; y++) {
         for (let x = 0; x < 3; x++) {
-          const randomUnitName =
-            unitNames[Math.floor(Math.random() * unitNames.length)];
-
           const position = {
             x,
-            y: team === "red" ? numRows - 1 - y : y,
+            y: team === Team.Red ? numRows - 1 - y : y,
           };
 
-          const unit = UnitFactory.createUnit(randomUnitName);
-          unit.attributes.team = team;
-          unit.attributes.position = position;
-          unit.attributes.isDefending = false;
-          unit.attributes.isParalyzed = false;
+          battlefieldGrid[position.y][position.x].attributes.team = team;
+          battlefieldGrid[position.y][position.x].attributes.position =
+            position;
 
-          battlefieldGrid[position.y][position.x] = unit;
-          allUnits.push(unit);
+          allUnits.push(battlefieldGrid[position.y][position.x]);
         }
       }
     });
@@ -62,46 +58,26 @@ export const GameLogic = () => {
 
     setBattlefield(battlefieldGrid);
     setTurnOrder(sortedUnits);
-    setCurrentUnitIndex(0);
   };
 
-  const handleUnitClick = (unit: Unit) => {
-    if (highlightedUnits.includes(unit)) {
-      setHighlightedUnits([unit]);
-    }
-  };
+  useEffect(() => {
+    initializeGame();
+  }, []);
 
-  const handleAction = (action: Action) => {
-    const currentUnit = turnOrder[currentUnitIndex];
-    const possibleTargets = action.getPossibleTargets(currentUnit, battlefield);
-    setCurrentAction(action);
-    setHighlightedUnits(possibleTargets);
-  };
+  return { battlefield, turnOrder };
+}
 
-  const confirmAction = () => {
-    const currentUnit = turnOrder[currentUnitIndex];
-
-    if (!currentAction) {
-      alert("Выберите действие.");
-      return;
-    }
-
-    if (currentAction.type !== "defend" && highlightedUnits.length === 0) {
-      alert("Выберите цель для действия.");
-      return;
-    }
-
-    const targets = currentAction.type === "defend" ? [] : highlightedUnits;
-
-    currentAction.perform(currentUnit, targets, battlefield, setAnimations);
-
-    setTimeout(() => {
-      setHighlightedUnits([]);
-      setCurrentAction(null);
-      setAnimations([]);
-      endTurn();
-    }, TimeoutValue);
-  };
+function useTurnManagement(
+  turnOrder: Unit[],
+  battlefield: Unit[][],
+  TIMEOUT_VALUE: number,
+) {
+  const [currentUnitIndex, setCurrentUnitIndex] = useState(0);
+  const [highlightedUnits, setHighlightedUnits] = useState<Unit[]>([]);
+  const [selectedUnits, setSelectedUnits] = useState<Unit[]>([]);
+  const [currentAction, setCurrentAction] = useState<Action | null>(null);
+  const [animations, setAnimations] = useState<ActionAnimation[]>([]);
+  const [hoveredUnit, setHoveredUnit] = useState<Unit | null>(null);
 
   const endTurn = () => {
     let nextIndex = currentUnitIndex;
@@ -121,10 +97,10 @@ export const GameLogic = () => {
       break;
     } while (nextIndex !== currentUnitIndex);
 
-    const teamsAlive = new Set<"red" | "orange">(
+    const teamsAlive = new Set<Team>(
       turnOrder
         .filter((unit) => unit.attributes.hp > 0 && unit.attributes.team)
-        .map((unit) => unit.attributes.team as "red" | "orange"),
+        .map((unit) => unit.attributes.team as Team),
     );
     if (teamsAlive.size <= 1) {
       const winningTeam = teamsAlive.values().next().value;
@@ -132,9 +108,92 @@ export const GameLogic = () => {
     }
   };
 
+  const confirmAction = () => {
+    const currentUnit = turnOrder[currentUnitIndex];
+
+    if (!currentAction) {
+      alert("Выберите действие.");
+      return;
+    }
+
+    if (currentAction.requiresTargetSelection && selectedUnits.length === 0) {
+      alert("Выберите цель для действия.");
+      return;
+    }
+
+    const targets = currentAction.requiresTargetSelection
+      ? selectedUnits
+      : currentAction.getPossibleTargets(currentUnit, battlefield);
+
+    currentAction.perform(currentUnit, targets, battlefield, setAnimations);
+
+    setTimeout(() => {
+      setHighlightedUnits([]);
+      setSelectedUnits([]);
+      setCurrentAction(null);
+      setAnimations([]);
+      endTurn();
+    }, TIMEOUT_VALUE);
+  };
+
+  const handleAction = (action: Action) => {
+    const currentUnit = turnOrder[currentUnitIndex];
+    const possibleTargets = action.getPossibleTargets(currentUnit, battlefield);
+
+    setCurrentAction(action);
+
+    if (action.requiresTargetSelection) {
+      setHighlightedUnits(possibleTargets);
+      setSelectedUnits([]);
+    } else {
+      setHighlightedUnits([]);
+      setSelectedUnits([]);
+    }
+  };
+
+  const handleUnitClick = (unit: Unit) => {
+    if (currentAction && currentAction.requiresTargetSelection) {
+      if (highlightedUnits.includes(unit)) {
+        setSelectedUnits([unit]);
+      }
+    }
+  };
+
   const handleHoverUnit = (unit: Unit | null) => {
     setHoveredUnit(unit);
   };
+
+  return {
+    currentUnitIndex,
+    highlightedUnits,
+    selectedUnits,
+    currentAction,
+    animations,
+    hoveredUnit,
+    setHighlightedUnits,
+    setSelectedUnits,
+    setCurrentAction,
+    confirmAction,
+    handleAction,
+    handleUnitClick,
+    handleHoverUnit,
+  };
+}
+
+export function useGameLogic() {
+  const { battlefield, turnOrder } = useInitializeGame();
+  const {
+    currentUnitIndex,
+    highlightedUnits,
+    selectedUnits,
+    currentAction,
+    animations,
+    handleUnitClick,
+    handleAction,
+    confirmAction,
+    hoveredUnit,
+    handleHoverUnit,
+  } = useTurnManagement(turnOrder, battlefield, TIMEOUT_VALUE);
 
   const currentUnit = turnOrder.length > 0 ? turnOrder[currentUnitIndex] : null;
 
@@ -144,12 +203,13 @@ export const GameLogic = () => {
     currentUnitIndex,
     currentUnit,
     highlightedUnits,
-    hoveredUnit,
+    selectedUnits,
     currentAction,
     animations,
     handleUnitClick,
     handleAction,
     confirmAction,
+    hoveredUnit,
     handleHoverUnit,
   };
-};
+}

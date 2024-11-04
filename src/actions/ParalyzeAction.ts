@@ -3,16 +3,17 @@ import { Unit } from "../models/Unit";
 import { Dispatch, SetStateAction } from "react";
 import { ActionAnimation } from "../animations/ActionAnimation";
 import { AnimationsFactory } from "../animations/AnimationFactory";
-const TimeoutValue = 600;
+const TIMEOUT_VALUE = 600;
 
 export class ParalyzeAction implements Action {
-  type: ActionType = "paralyze";
+  type: ActionType = ActionType.Paralyze;
   label: string = "Парализовать";
+  requiresTargetSelection: boolean = true;
 
   perform(
     unit: Unit,
     targets: Unit[],
-    battlefield: (Unit | null)[][],
+    battlefield: Unit[][],
     setAnimations: Dispatch<SetStateAction<ActionAnimation[]>>,
   ): void {
     const animationStrategy = AnimationsFactory.createStrategy(this.type);
@@ -25,10 +26,10 @@ export class ParalyzeAction implements Action {
           `${unit.attributes.name} парализует ${target.attributes.name}`,
         );
       });
-    }, TimeoutValue);
+    }, TIMEOUT_VALUE);
   }
 
-  getPossibleTargets(unit: Unit, battlefield: (Unit | null)[][]): Unit[] {
+  getPossibleTargets(unit: Unit, battlefield: Unit[][]): Unit[] {
     const enemyUnits = unit.getEnemyUnits(battlefield);
     return enemyUnits.filter((enemy) => enemy.attributes.hp > 0);
   }

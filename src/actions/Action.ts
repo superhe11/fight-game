@@ -2,17 +2,19 @@ import { Unit } from "../models/Unit";
 import { Dispatch, SetStateAction } from "react";
 import { ActionAnimation } from "../animations/ActionAnimation";
 
-export type ActionType =
-  | "attack"
-  | "aoeAttack"
-  | "defend"
-  | "heal"
-  | "aoeHeal"
-  | "paralyze";
+export enum ActionType {
+  Attack = "attack",
+  AoeAttack = "aoeAttack",
+  Defend = "defend",
+  Heal = "heal",
+  AoeHeal = "aoeHeal",
+  Paralyze = "paralyze",
+}
 
 export interface Action {
   type: ActionType;
   label: string;
+  requiresTargetSelection: boolean;
   perform(
     unit: Unit,
     targets: Unit[],

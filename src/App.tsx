@@ -1,4 +1,4 @@
-import { GameLogic } from "./GameLogic/GameLogic";
+import { useGameLogic } from "./GameLogic/GameLogic";
 import { Battlefield } from "./components/Battlefield/Battlefield";
 import { RoundInfo } from "./components/RoundInfo/RoundInfo";
 import { ActionButtons } from "./components/UnitActions/ActionButtons";
@@ -17,7 +17,7 @@ export const App: React.FC = () => {
     handleAction,
     confirmAction,
     handleHoverUnit,
-  } = GameLogic();
+  } = useGameLogic();
 
   return (
     <div className="game">

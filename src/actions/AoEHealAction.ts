@@ -3,16 +3,17 @@ import { Unit } from "../models/Unit";
 import { Dispatch, SetStateAction } from "react";
 import { ActionAnimation } from "../animations/ActionAnimation";
 import { AnimationsFactory } from "../animations/AnimationFactory";
-const TimeoutValue = 600;
+const TIMEOUT_VALUE = 600;
 
 export class AoEHealAction implements Action {
-  type: ActionType = "aoeHeal";
+  type: ActionType = ActionType.AoeHeal;
   label: string = "Массовое лечение";
+  requiresTargetSelection: boolean = false;
 
   perform(
     unit: Unit,
     targets: Unit[],
-    battlefield: (Unit | null)[][],
+    battlefield: Unit[][],
     setAnimations: Dispatch<SetStateAction<ActionAnimation[]>>,
   ): void {
     const animationStrategy = AnimationsFactory.createStrategy(this.type);
@@ -29,10 +30,10 @@ export class AoEHealAction implements Action {
           `${unit.attributes.name} исцеляет ${target.attributes.name} на ${healAmount} HP`,
         );
       });
-    }, TimeoutValue);
+    }, TIMEOUT_VALUE);
   }
 
-  getPossibleTargets(unit: Unit, battlefield: (Unit | null)[][]): Unit[] {
+  getPossibleTargets(unit: Unit, battlefield: Unit[][]): Unit[] {
     const allyUnits = unit.getAllyUnits(battlefield);
     return allyUnits.filter(
       (ally) =>

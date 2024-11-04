@@ -1,6 +1,7 @@
 import React from "react";
 import { Unit } from "../../models/Unit";
 import { Action } from "../../actions/Action";
+import styles from "../../styles/ActionButtons.module.css";
 
 interface ActionButtonsProps {
   currentUnit: Unit | null;
@@ -21,14 +22,20 @@ export const ActionButtons: React.FC<ActionButtonsProps> = ({
   }
 
   return (
-    <div className="actions">
+    <div className={styles.actions}>
       {currentUnit.actions.map((action) => (
-        <button key={action.type} onClick={() => handleAction(action)}>
+        <button
+          key={action.type}
+          onClick={() => handleAction(action)}
+          className={styles.button}
+        >
           {action.label}
         </button>
       ))}
       {currentAction && (
-        <button onClick={confirmAction}>Подтвердить действие</button>
+        <button onClick={confirmAction} className={styles.button}>
+          Подтвердить действие
+        </button>
       )}
     </div>
   );

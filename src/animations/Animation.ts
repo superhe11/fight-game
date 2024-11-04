@@ -21,11 +21,15 @@ export abstract class Animations {
     _fromUnit: Unit,
     toUnits: Unit[],
     _battlefield: (Unit | null)[][],
-    setAnimations: Dispatch<SetStateAction<ActionAnimation[]>>
+    setAnimations: Dispatch<SetStateAction<ActionAnimation[]>>,
   ): void {
-    toUnits.forEach(targetUnit => {
-      const animation = new ActionAnimation(this.actionType, targetUnit, this.iconData);
-      setAnimations(prevAnimations => [...prevAnimations, animation]);
+    toUnits.forEach((targetUnit) => {
+      const animation = new ActionAnimation(
+        this.actionType,
+        targetUnit,
+        this.iconData,
+      );
+      setAnimations((prevAnimations) => [...prevAnimations, animation]);
     });
   }
 }

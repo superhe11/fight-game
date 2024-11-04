@@ -3,7 +3,7 @@ import { ActionAnimation } from "../../animations/ActionAnimation";
 import { BattlefieldCell } from "./BattlefieldCell";
 
 interface BattlefieldCellWrapperProps {
-  unit: Unit | null;
+  unit: Unit;
   x: number;
   y: number;
   onUnitClick: (unit: Unit) => void;

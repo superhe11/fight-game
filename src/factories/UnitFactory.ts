@@ -9,43 +9,45 @@ import { Monk } from "../models/units/Monk";
 import { Bishop } from "../models/units/Bishop";
 import { Sirena } from "../models/units/Sirena";
 
+export enum UnitName {
+  Skeleton = "Skeleton",
+  Centaur = "Centaur",
+  Bandit = "Bandit",
+  ElfArcher = "Elf Archer",
+  SkeletonMage = "Skeleton Mage",
+  Archimage = "Archimage",
+  Monk = "Monk",
+  Bishop = "Bishop",
+  Sirena = "Sirena",
+}
+
 export class UnitFactory {
-  static createUnit(name: string): Unit {
+  static createUnit(name: UnitName): Unit {
     switch (name) {
-      case "Skeleton":
+      case UnitName.Skeleton:
         return new Skeleton();
-      case "Centaur":
+      case UnitName.Centaur:
         return new Centaur();
-      case "Bandit":
+      case UnitName.Bandit:
         return new Bandit();
-      case "Elf Archer":
+      case UnitName.ElfArcher:
         return new ElfArcher();
-      case "Skeleton Mage":
+      case UnitName.SkeletonMage:
         return new SkeletonMage();
-      case "Archimage":
+      case UnitName.Archimage:
         return new Archimage();
-      case "Monk":
+      case UnitName.Monk:
         return new Monk();
-      case "Bishop":
+      case UnitName.Bishop:
         return new Bishop();
-      case "Sirena":
+      case UnitName.Sirena:
         return new Sirena();
       default:
         throw new Error(`Unknown unit type: ${name}`);
     }
   }
 
-  static getUnitNames(): string[] {
-    return [
-      "Skeleton",
-      "Centaur",
-      "Bandit",
-      "Elf Archer",
-      "Skeleton Mage",
-      "Archimage",
-      "Monk",
-      "Bishop",
-      "Sirena",
-    ];
+  static getUnitNames(): UnitName[] {
+    return Object.values(UnitName);
   }
 }

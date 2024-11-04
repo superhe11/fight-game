@@ -20,7 +20,9 @@ interface UnitAnimationIconProps {
   animation: ActionAnimation;
 }
 
-export const UnitAnimationIcon: React.FC<UnitAnimationIconProps> = ({ animation }) => {
+export const UnitAnimationIcon: React.FC<UnitAnimationIconProps> = ({
+  animation,
+}) => {
   const IconComponent = getIconComponent(animation.iconData.iconName);
 
   return (

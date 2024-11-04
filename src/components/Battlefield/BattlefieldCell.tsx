@@ -5,7 +5,7 @@ import { UnitAnimationIcon } from "../UnitActions/UnitAnimationIcon";
 import styles from "../../styles/BattlefieldCell.module.css";
 
 interface BattlefieldCellProps {
-  unit: Unit | null;
+  unit: Unit;
   isHighlighted: boolean;
   isCurrentUnit: boolean;
   isHovered: boolean;
@@ -37,7 +37,7 @@ export const BattlefieldCell: React.FC<BattlefieldCellProps> = ({
 
   return (
     <div className={cellClassNames} onClick={onClick}>
-      {unit && (
+      {
         <>
           <div className={styles.unitImageContainer}>
             {isCurrentUnit ? (
@@ -61,13 +61,12 @@ export const BattlefieldCell: React.FC<BattlefieldCellProps> = ({
             )}
             {unit.attributes.hp > 0 &&
               unit.attributes.hp < unit.attributes.maxHp && (
-               
                 <div
-                className={styles.redOverlay}
-                style={{
-                  height: `${(1 - unit.attributes.hp / unit.attributes.maxHp) * 100}%`,
-                }}
-              /> 
+                  className={styles.redOverlay}
+                  style={{
+                    height: `${(1 - unit.attributes.hp / unit.attributes.maxHp) * 100}%`,
+                  }}
+                />
               )}
             <div className={styles.unitIcons}>
               <UnitIcons
@@ -84,7 +83,7 @@ export const BattlefieldCell: React.FC<BattlefieldCellProps> = ({
             {unit.attributes.hp}/{unit.attributes.maxHp}
           </div>
         </>
-      )}
+      }
     </div>
   );
 };

@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 .game {
   display: flex;
   flex-direction: column;

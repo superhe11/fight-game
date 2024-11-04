@@ -7,10 +7,7 @@ export class MeleeUnit extends Unit {
     this.actions = [new AttackAction(), new DefendAction()];
   }
 
-  getPossibleTargets(
-    battlefield: (Unit | null)[][],
-    _enemyUnits: Unit[],
-  ): Unit[] {
+  getPossibleTargets(battlefield: (Unit | null)[][]): Unit[] {
     const { x, y } = this.attributes.position!;
     const team = this.attributes.team!;
     const battlefieldWidth = battlefield[0].length;

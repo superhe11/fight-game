@@ -17,8 +17,8 @@ export const TurnOrderItem: React.FC<TurnOrderItemProps> = ({
       onMouseLeave={() => onHoverUnit(null)}
       className={isCurrent ? "current" : ""}
     >
-      {unit.attributes.name} ({unit.attributes.team}) - HP:{" "}
-      {unit.attributes.hp}/{unit.attributes.maxHp}
+      {unit.attributes.name} ({unit.attributes.team}) - HP: {unit.attributes.hp}
+      /{unit.attributes.maxHp}
     </li>
   );
 };
